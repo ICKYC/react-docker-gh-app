@@ -1,15 +1,15 @@
 name: Deploy Frontend
 on:
   push:
-    braches:
+    branches:
       -main
 
 jobs:
   build:
-    runs-on: ubuntu-tatest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --
+      - run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
       - run: docker build -t yechan0329/react-test -f Dockerfile.dev .
       - run: docker run -e CI=true yechan0329/react-test npm test
 
@@ -23,7 +23,7 @@ jobs:
           aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
           application_name: react-docker-gh-test
           environment_name: React-docker-gh-test-env
-          existing_buckt_name: elasticbeanstalk-ap-southeast-2-577353837886
+          existing_bucket_name: elasticbeanstalk-ap-southeast-2-577353837886
           region: ap-southeast-2
           version_label: ${{ github.sha }}
           deployment_package: deploy.zip
